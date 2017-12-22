@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChurchWebServer", "ChurchWebServer\ChurchWebServer.csproj", "{D60429B2-65DE-4DBA-A940-462DB7F4F030}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HTML", "HTML", "{4DC7EEEF-BBB1-49B4-8278-EB0B19F71977}"
+	ProjectSection(SolutionItems) = preProject
+		ChurchWebServer\HTML\2048.html = ChurchWebServer\HTML\2048.html
+		ChurchWebServer\HTML\audio.html = ChurchWebServer\HTML\audio.html
+		ChurchWebServer\HTML\index.html = ChurchWebServer\HTML\index.html
+		ChurchWebServer\HTML\topnavigationbar.html = ChurchWebServer\HTML\topnavigationbar.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JS", "JS", "{FF4A55EE-C743-4F28-BAC1-90C3C3BED722}"
+	ProjectSection(SolutionItems) = preProject
+		..\js\audio_page.js = ..\js\audio_page.js
+		..\js\script.js = ..\js\script.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSS", "CSS", "{BFFC4CEC-96D6-49A8-B4F6-50A6C7D7DF61}"
+	ProjectSection(SolutionItems) = preProject
+		..\css\general.css = ..\css\general.css
+		..\css\navbar.css = ..\css\navbar.css
+		..\css\styles.css = ..\css\styles.css
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D60429B2-65DE-4DBA-A940-462DB7F4F030}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D60429B2-65DE-4DBA-A940-462DB7F4F030}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D60429B2-65DE-4DBA-A940-462DB7F4F030}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D60429B2-65DE-4DBA-A940-462DB7F4F030}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
