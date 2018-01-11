@@ -7,20 +7,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChurchWebServer", "ChurchWe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HTML", "HTML", "{4DC7EEEF-BBB1-49B4-8278-EB0B19F71977}"
 	ProjectSection(SolutionItems) = preProject
-		ChurchWebServer\HTML\2048.html = ChurchWebServer\HTML\2048.html
-		ChurchWebServer\HTML\audio.html = ChurchWebServer\HTML\audio.html
-		ChurchWebServer\HTML\index.html = ChurchWebServer\HTML\index.html
-		ChurchWebServer\HTML\topnavigationbar.html = ChurchWebServer\HTML\topnavigationbar.html
+		..\2048.html = ..\2048.html
+		..\audio.html = ..\audio.html
+		..\databasepage.html = ..\databasepage.html
+		..\index.html = ..\index.html
+		..\person_view_page.html = ..\person_view_page.html
+		..\topnavigationbar.html = ..\topnavigationbar.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JS", "JS", "{FF4A55EE-C743-4F28-BAC1-90C3C3BED722}"
 	ProjectSection(SolutionItems) = preProject
 		..\js\audio_page.js = ..\js\audio_page.js
+		..\js\database_page.js = ..\js\database_page.js
+		..\js\person_view_page.js = ..\js\person_view_page.js
 		..\js\script.js = ..\js\script.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSS", "CSS", "{BFFC4CEC-96D6-49A8-B4F6-50A6C7D7DF61}"
 	ProjectSection(SolutionItems) = preProject
+		..\css\form.css = ..\css\form.css
 		..\css\general.css = ..\css\general.css
 		..\css\navbar.css = ..\css\navbar.css
 		..\css\styles.css = ..\css\styles.css
