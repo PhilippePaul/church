@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="DatabaseInterface.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />

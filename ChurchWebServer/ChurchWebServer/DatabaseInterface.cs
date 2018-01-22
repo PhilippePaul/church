@@ -23,8 +23,7 @@ namespace ChurchWebServer
             database = "church";
             uid = "root";
             password = "MyNewPass";
-            var connectionString = "SERVER=" + server + ";" + "DATABASE=" +
-            database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+            var connectionString = $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};CHARSET=utf8;";
 
             connection = new MySqlConnection(connectionString);
         }
@@ -66,15 +65,21 @@ namespace ChurchWebServer
             }
         }
 
-        public void Insert()
+        public void CreatePerson(PersonInfo personInfo)
         {
-            var query = "INSERT INTO tableinfo (name, age) VALUES('John Smith', '33')";
-
             if (OpenConnection())
             {
                 try
                 {
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    var cmd = new MySqlCommand("create_person", connection);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("fn", personInfo.Person.FirstName);
+                    cmd.Parameters.AddWithValue("ln", personInfo.Person.LastName);
+                    cmd.Parameters.AddWithValue("bd", personInfo.Person.BirthDate);
+                    cmd.Parameters.AddWithValue("gender", personInfo.Person.Gender);
+                    cmd.Parameters.AddWithValue("email", personInfo.Person.Email);
+                    cmd.Parameters.AddWithValue("member", personInfo.Person.IsMember);
+
                     cmd.ExecuteNonQuery();
                 }
                 finally
@@ -124,44 +129,11 @@ namespace ChurchWebServer
 
         #region Get methods
 
-        public List<string>[] Select()
-        {
-            var query = "SELECT * FROM tableinfo";
-
-            var list = new List<string>[3];
-            list[0] = new List<string>();
-            list[1] = new List<string>();
-            list[2] = new List<string>();
-
-            if (OpenConnection())
-            {
-                try
-                {
-                    var cmd = new MySqlCommand(query, connection);
-                    var dataReader = cmd.ExecuteReader();
-
-                    while (dataReader.Read())
-                    {
-                        list[0].Add(dataReader["id"] + "");
-                        list[1].Add(dataReader["name"] + "");
-                        list[2].Add(dataReader["age"] + "");
-                    }
-
-                    dataReader.Close();
-                }
-                finally
-                {
-                    CloseConnection();
-                }
-            }
-            return list;
-        }
-
-        public List<string> GetChildren(int id)
+        public List<Person> GetChildren(int id)
         {
             var query = "get_children_by_id";
 
-            var list = new List<string>();
+            var list = new List<Person>();
 
             if (OpenConnection())
             {
@@ -175,7 +147,7 @@ namespace ChurchWebServer
 
                     while (dataReader.Read())
                     {
-                        list.Add($"{dataReader["firstname"]} {dataReader["lastname"]}");
+                        list.Add(ExtractPerson(dataReader));
                     }
 
                     dataReader.Close();
@@ -188,11 +160,11 @@ namespace ChurchWebServer
             return list;
         }
 
-        public List<string> GetParents(int id)
+        public List<Person> GetParents(int id)
         {
             var query = "get_parents_by_id";
 
-            var list = new List<string>();
+            var list = new List<Person>();
 
             if (OpenConnection())
             {
@@ -206,7 +178,7 @@ namespace ChurchWebServer
 
                     while (dataReader.Read())
                     {
-                        list.Add($"{dataReader["firstname"]} {dataReader["lastname"]}");
+                        list.Add(ExtractPerson(dataReader));
                     }
 
                     dataReader.Close();
@@ -237,18 +209,7 @@ namespace ChurchWebServer
 
                     if (dataReader.Read())
                     {
-                        person.Id = (int)dataReader["idperson"];
-                        person.FirstName = dataReader["firstname"].ToString();
-                        person.LastName = dataReader["lastname"].ToString();
-                        person.Age = (int)dataReader["age"];
-                        person.Gender = (Gender)Convert.ToInt32(dataReader["gender"]);
-                        person.Email = dataReader["email"].ToString();
-                        person.IsMember = Convert.ToBoolean(dataReader["ismember"]);
-                        person.Address.StreetAddress = dataReader["address1"].ToString();
-                        person.Address.City = dataReader["city"].ToString();
-                        person.Address.ProvinceState = dataReader["province_state"].ToString();
-                        person.Address.Country = dataReader["country"].ToString();
-                        person.Address.PostalCode = dataReader["postalcode"].ToString();
+                        person = ExtractPerson(dataReader);
                     }
 
                     dataReader.Close();
@@ -280,18 +241,7 @@ namespace ChurchWebServer
 
                     if (dataReader.Read())
                     {
-                        person.Id = (int)dataReader["idperson"];
-                        person.FirstName = dataReader["firstname"].ToString();
-                        person.LastName = dataReader["lastname"].ToString();
-                        person.Age = (int)dataReader["age"];
-                        person.Gender = (Gender)Convert.ToInt32(dataReader["gender"]);
-                        person.Email = dataReader["email"].ToString();
-                        person.IsMember = Convert.ToBoolean(dataReader["ismember"]);
-                        person.Address.StreetAddress = dataReader["address1"].ToString();
-                        person.Address.City = dataReader["city"].ToString();
-                        person.Address.ProvinceState = dataReader["province_state"].ToString();
-                        person.Address.Country = dataReader["country"].ToString();
-                        person.Address.PostalCode = dataReader["postalcode"].ToString();
+                        person = ExtractPerson(dataReader);
                     }
 
                     dataReader.Close();
@@ -322,20 +272,7 @@ namespace ChurchWebServer
 
                     while (dataReader.Read())
                     {
-                        var person = new Person();
-                        person.Id = (int)dataReader["idperson"];
-                        person.FirstName = dataReader["firstname"].ToString();
-                        person.LastName = dataReader["lastname"].ToString();
-                        person.Age = (int)dataReader["age"];
-                        person.Gender = (Gender)Convert.ToInt32(dataReader["gender"]);
-                        person.Email = dataReader["email"].ToString();
-                        person.IsMember = Convert.ToBoolean(dataReader["ismember"]);
-                        person.Address.StreetAddress = dataReader["address1"].ToString();
-                        person.Address.City = dataReader["city"].ToString();
-                        person.Address.ProvinceState = dataReader["province_state"].ToString();
-                        person.Address.Country = dataReader["country"].ToString();
-                        person.Address.PostalCode = dataReader["postalcode"].ToString();
-                        personList.Add(person);
+                        personList.Add(ExtractPerson(dataReader));
                     }
 
                     dataReader.Close();
@@ -349,22 +286,24 @@ namespace ChurchWebServer
             return personList;
         }
 
-        #endregion
-
-        public int Count()
+        private Person ExtractPerson(MySqlDataReader dataReader)
         {
-            var query = "SELECT Count(*) FROM tableinfo";
-            int Count = -1;
-
-            if (OpenConnection())
-            {
-                var cmd = new MySqlCommand(query, connection);
-
-                Count = int.Parse(cmd.ExecuteScalar() + "");
-
-                CloseConnection();
-            }
-            return Count;
+            var person = new Person();
+            person.Id = (int)dataReader["idperson"];
+            person.FirstName = dataReader["firstname"].ToString();
+            person.LastName = dataReader["lastname"].ToString();
+            person.BirthDate = (DateTime)dataReader["birthdate"];
+            person.Gender = (Gender)Convert.ToInt32(dataReader["gender"]);
+            person.Email = dataReader["email"].ToString();
+            person.IsMember = Convert.ToBoolean(dataReader["ismember"]);
+            person.Address.StreetAddress = dataReader["address1"].ToString();
+            person.Address.City = dataReader["city"].ToString();
+            person.Address.ProvinceState = dataReader["province_state"].ToString();
+            person.Address.Country = dataReader["country"].ToString();
+            person.Address.PostalCode = dataReader["postalcode"].ToString();
+            return person;
         }
+
+        #endregion
     }
 }

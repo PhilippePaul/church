@@ -119,6 +119,14 @@ namespace ChurchWebServer
             m_databaseInterface = new DatabaseInterface();
         }
 
+        private void Initialize(string path, int port)
+        {
+            m_rootDirectory = path;
+            m_port = port;
+            m_stopServer.Reset();
+            Task.Run(() => Listen());
+        }
+
         /// <summary>
         /// Stop server and dispose all functions.
         /// </summary>
@@ -159,26 +167,26 @@ namespace ChurchWebServer
 
         private void HandleGet(HttpListenerContext context)
         {
-            string filename = context.Request.Url.AbsolutePath;
-            filename = filename.Substring(1); //remove slash
-
-            if (string.IsNullOrEmpty(filename))
+            try
             {
-                foreach (string indexFile in m_indexFiles)
+                string filename = context.Request.Url.AbsolutePath;
+                filename = filename.Substring(1); //remove slash
+
+                if (string.IsNullOrEmpty(filename))
                 {
-                    if (File.Exists(Path.Combine(m_rootDirectory, indexFile)))
+                    foreach (string indexFile in m_indexFiles)
                     {
-                        filename = indexFile;
-                        break;
+                        if (File.Exists(Path.Combine(m_rootDirectory, indexFile)))
+                        {
+                            filename = indexFile;
+                            break;
+                        }
                     }
                 }
-            }
 
-            filename = Path.Combine(m_rootDirectory, filename);
+                filename = Path.Combine(m_rootDirectory, filename);
 
-            if (File.Exists(filename))
-            {
-                try
+                if (File.Exists(filename))
                 {
                     Stream input = new FileStream(filename, FileMode.Open);
 
@@ -192,52 +200,68 @@ namespace ChurchWebServer
                     byte[] buffer = new byte[1024 * 16];
                     int nbytes;
                     while ((nbytes = input.Read(buffer, 0, buffer.Length)) > 0)
+                    {
                         context.Response.OutputStream.Write(buffer, 0, nbytes);
+                    }
                     input.Close();
 
                     context.Response.StatusCode = (int)HttpStatusCode.OK;
                     context.Response.OutputStream.Flush();
+
                 }
-                catch (Exception ex)
+                else
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    Console.WriteLine(ex);
+                    context.Response.StatusCode = (int)HttpStatusCode.NotFound;
                 }
-
             }
-            else
+            catch (Exception ex)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                Console.WriteLine(ex);
             }
-
-            context.Response.OutputStream.Close();
+            finally
+            {
+                context?.Response?.OutputStream?.Close();
+            }
         }
 
         private void HandlePost(HttpListenerContext context)
         {
-            switch (context.Request.Url.LocalPath.Substring(1))
+            try
             {
-                case "getParents":
-                    HandleGetParents(context);
-                    break;
-                case "getChildren":
-                    HandleGetChildren(context);
-                    break;
-                case "getPerson":
-                    HandleGetPerson(context);
-                    break;
-                case "getPersonList":
-                    HandleGetPersonList(context);
-                    break;
-                default:
-                    break;
+                switch (context.Request.Url.LocalPath.Substring(1))
+                {
+                    case "getParents":
+                        HandleGetParents(context);
+                        break;
+                    case "getChildren":
+                        HandleGetChildren(context);
+                        break;
+                    case "getPerson":
+                        HandleGetPerson(context);
+                        break;
+                    case "getPersonList":
+                        HandleGetPersonList(context);
+                        break;
+                    case "addPerson":
+                        HandleAddPerson(context);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            finally
+            {
+                context?.Response?.Close();
             }
         }
+
+        #region Post handlers
 
         private void HandleGetChildren(HttpListenerContext context)
         {
             int id;
-            if(!int.TryParse(context.Request.Url.Query.Substring(1), out id))
+            if (!int.TryParse(context.Request.Url.Query.Substring(1), out id))
             {
                 Console.WriteLine($"Invalid id in request. URL: {context.Request.RawUrl}");
                 return;
@@ -245,9 +269,9 @@ namespace ChurchWebServer
 
             try
             {
-                var bytes = Encoding.ASCII.GetBytes(string.Join(";", m_databaseInterface.GetChildren(id)));
-                context.Response.OutputStream.Write(bytes, 0, bytes.Count());
+                context.Response.OutputStream.WriteUTF8String(JsonConvert.SerializeObject(m_databaseInterface.GetChildren(id)));
 
+                context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
                 context.Response.OutputStream.Flush();
             }
@@ -271,9 +295,9 @@ namespace ChurchWebServer
 
             try
             {
-                var bytes = Encoding.ASCII.GetBytes(string.Join(";", m_databaseInterface.GetParents(id)));
-                context.Response.OutputStream.Write(bytes, 0, bytes.Count());
+                context.Response.OutputStream.WriteUTF8String(JsonConvert.SerializeObject(m_databaseInterface.GetParents(id)));
 
+                context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
                 context.Response.OutputStream.Flush();
             }
@@ -297,8 +321,7 @@ namespace ChurchWebServer
 
             try
             {
-                var bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(m_databaseInterface.GetPerson(id)));
-                context.Response.OutputStream.Write(bytes, 0, bytes.Count());
+                context.Response.OutputStream.WriteUTF8String(JsonConvert.SerializeObject(m_databaseInterface.GetPerson(id)));
 
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -317,8 +340,7 @@ namespace ChurchWebServer
         {
             try
             {
-                var bytes = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(m_databaseInterface.GetPersonList()));
-                context.Response.OutputStream.Write(bytes, 0, bytes.Count());
+                context.Response.OutputStream.WriteUTF8String(JsonConvert.SerializeObject(m_databaseInterface.GetPersonList()));
 
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -333,12 +355,27 @@ namespace ChurchWebServer
             context.Response.OutputStream.Close();
         }
 
-        private void Initialize(string path, int port)
+
+        private void HandleAddPerson(HttpListenerContext context)
         {
-            m_rootDirectory = path;
-            m_port = port;
-            m_stopServer.Reset();
-            Task.Run(() => Listen());
+            try
+            {
+                var request = context.Request;
+                using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
+                {
+                    var val = reader.ReadToEnd();
+                    m_databaseInterface.CreatePerson(JsonConvert.DeserializeObject<PersonInfo>(val));
+                }
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.OutputStream.WriteUTF8String(ex.Message);
+                Console.WriteLine(ex);
+            }
         }
+
+        #endregion
     }
 }

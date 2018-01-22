@@ -3,84 +3,28 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="css/styles.css?v=1.0">
+    <link rel="stylesheet" type="text/css" href="css/styles.css?v=1.0">
+    <link rel="stylesheet" type="text/css"href="css/databasepage.css?v=1.0">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script src="js/script.js"></script>
-    <script src="js/database_page.js"></script>
+    <script src="js/databasepage.js"></script>
 </head>
-<body>
+<body style="background-color:rgba(0,0,0,.06)" class="grid-container">
     <div id="navigationbar" class="navContainer"></div>
-    <form action="/action_page">
-        <fieldset style="float:left">
-            <legend>Information personelle:</legend>
-            <p>
-                <label for="firstname">Prénom:</label>
-                <input type="text" id="firstname" value="Mickey">
-            </p>
-            <p>
-                <label for="lastname">Nom:</label>
-                <input type="text" id="lastname" value="Mouse">
-            </p>
-            <p>
-                <label for="gender">Sexe:</label>
-                <input type="radio" name="gender" value="male" checked>Masculin
-                <input type="radio" name="gender" value="female">Feminin
-            </p>
-            <p>
-                <label for="age">Date de naissance:</label>
-                <label>
-                    <input type="number" maxlength="2" id="bDay_day" placeholder="Jour" style="float:left;width:50px">
-                    <input type="number" maxlength="2" id="bDay_month" placeholder="Mois" style="float:left;width:50px">
-                    <input type="number" maxlength="4" id="bDay_year" placeholder="Année" style="width:60px">
-                </label>
-            </p>
-            <p>
-                <label for="email">Adresse courriel:</label>
-                <input type="email" id="email" value="philippe.paul@live.com">
-            </p>
-            <p>
-                <label for="ismember">Membre:</label>
-                <input type="radio" name="member" id="ismemberyes">Oui
-                <input type="radio" name="member" id="ismemberno" checked>Non
-            </p>
-        </fieldset>
-        <fieldset style="float:left">
-            <legend>Adresse(s):</legend>
-            <p>
-                <label for="address">Addresse (rue, no, apt, bloc):</label>
-                <input type="text" id="address" value="19 ave Neufchateau">
-            </p>
-            <p>
-                <label for="city">Ville:</label>
-                <input type="text" id="city" value="Lorraine">
-            </p>
-            <p>
-                <label for="province_state">Province/État:</label>
-                <input type="text" id="province_state" value="QC"><!--drop down-->
-            </p>
-            <p>
-                <label for="country">Pays:</label>
-                <input type="text" id="country" value="Canada">
-            </p>
-            <p>
-                <label for="postalcode">Code Postal:</label>
-                <input type="text" id="postalcode" value="J6Z 1R3">
-            </p>
-        </fieldset>
-        <fieldset style="float:left">
-            <legend>Famille</legend>
-            <fieldset style="float:left">
-                <legend>Parent(s)</legend>
-                <div id="parentsList">
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>Enfant(s)</legend>
-                <div id="childrenList">
-                </div>
-            </fieldset>
-        </fieldset>
-        <input style="width:100px;height:30px;" type="submit" value="Submit">
-    </form>
+    <div class="sidebar-container">
+        <div class="sidebar">
+            <a class="sidebaritem" href="addperson_form.html" onclick="return false;">Ajouter un profil</a>
+            <a class="sidebaritem selected" href="person_view_page.html" onclick="return false;">Modifier un profil</a>
+            <a class="sidebaritem" href="index.html" onclick="return false;">Groupes Connection</a>
+            <a class="sidebaritem" href="audio.html" onclick="return false;">Petits Groupes</a>
+            <a class="sidebaritem" href="index.html" onclick="return false;">VIDEO</a>
+            <a class="sidebaritem" href="index.html" onclick="return false;">RESERVATIONS</a>
+            <a class="sidebaritem" href="index.html" onclick="return false;">BIBLIOTHEQUE</a>
+            <a class="sidebaritem" href="2048.html" onclick="return false;">2048</a>
+        </div>
+        <iframe id="viewframe" class="contentViewer" frameborder="0"></iframe>
+    </div>
 </body>
 </html>

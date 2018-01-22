@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="css/personform.css?v=1.0">
+</head>
+<body>
+    <div class="userinfo">
+        <fieldset>
+            <legend>Nom</legend>
+            <input type="text" id="firstname" class="formfield" placeholder="Prénom" style="float:left;width:auto" />
+            <input type="text" id="lastname" class="formfield" placeholder="Nom" style="float:left;width:auto;margin-left:5px" />
+        </fieldset>
+        <fieldset>
+            <legend>Sexe</legend>
+            <input type="text" id="gender" class="formfield">
+        </fieldset>
+        <fieldset>
+            <legend>Date de naissance</legend>
+            <input type="number" min="1" max="31" id="bDate_day" class="formfield" style="width:60px">
+            <select id="bDate_month" class="month_picker">
+                <option value="0">Janvier</option>
+                <option value="1">Février</option>
+                <option value="2">Mars</option>
+                <option value="3">Avril</option>
+                <option value="4">Mai</option>
+                <option value="5">Juin</option>
+                <option value="6">Juillet</option>
+                <option value="7">Août</option>
+                <option value="8">Septembre</option>
+                <option value="9">Octobre</option>
+                <option value="10">Novembre</option>
+                <option value="11">Décembre</option>
+            </select>
+            <input type="number" min="1900" max="3000" id="bDate_year" class="formfield" style="width:auto;margin-right:0">
+        </fieldset>
+        <fieldset>
+            <legend>Adresse courriel</legend>
+            <input type="email" id="email" class="formfield">
+        </fieldset>
+        <fieldset>
+            <legend>Membre</legend>
+            <input type="text" id="ismember" class="formfield">
+        </fieldset>
+        <fieldset>
+            <legend>Adresse</legend>
+            <input type="text" id="address" class="formfield">
+        </fieldset>
+        <fieldset>
+            <legend>Ville</legend>
+            <input type="text" id="city" class="formfield">
+        </fieldset>
+        <fieldset>
+            <legend>Province/État</legend>
+            <input type="text" id="province_state" class="formfield">
+        </fieldset>
+        <fieldset>
+            <legend>Pays</legend>
+            <input type="text" id="country" class="formfield">
+        </fieldset>
+        <fieldset>
+            <legend>Code Postal</legend>
+            <input type="text" id="postalcode" class="formfield">
+        </fieldset>
+    </div>
+</body>
+</html>

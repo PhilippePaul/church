@@ -1,0 +1,40 @@
+﻿<!doctype html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="css/styles.css?v=1.0">
+    <link rel="stylesheet" href="css/addperson_form.css?v=1.0">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="js/addperson_form.js"></script>
+</head>
+<body>
+    <div class="grid-container">
+        <div class="personform-container">
+            <div id="personform">
+            </div>
+            <input id="savePerson" type="button" style="display:block" value="Enregistrer"/>
+        </div>
+        <div class="parentsList-container">
+            <fieldset id="parentsField">
+                <legend>Parents</legend>
+                <input id="addParent" type="button" value="Ajouter">
+                <select id="parentSelectList"></select>
+                <div id="parentsList">
+                </div>
+            </fieldset>
+        </div>
+        <div class="childrenList-container">
+            <fieldset id="childrenField">
+                <legend>Enfant(s)</legend>
+                <input id="addChild" type="button" value="Ajouter">
+                <select id="childSelectList"></select>
+                <div id="childrenList">
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</body>
+</html>

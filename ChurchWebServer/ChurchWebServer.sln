@@ -8,26 +8,32 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HTML", "HTML", "{4DC7EEEF-BBB1-49B4-8278-EB0B19F71977}"
 	ProjectSection(SolutionItems) = preProject
 		..\2048.html = ..\2048.html
+		..\addperson_form.html = ..\addperson_form.html
 		..\audio.html = ..\audio.html
 		..\databasepage.html = ..\databasepage.html
 		..\index.html = ..\index.html
+		..\person_form.html = ..\person_form.html
 		..\person_view_page.html = ..\person_view_page.html
 		..\topnavigationbar.html = ..\topnavigationbar.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JS", "JS", "{FF4A55EE-C743-4F28-BAC1-90C3C3BED722}"
 	ProjectSection(SolutionItems) = preProject
+		..\js\addperson_form.js = ..\js\addperson_form.js
 		..\js\audio_page.js = ..\js\audio_page.js
-		..\js\database_page.js = ..\js\database_page.js
+		..\js\databasepage.js = ..\js\databasepage.js
 		..\js\person_view_page.js = ..\js\person_view_page.js
 		..\js\script.js = ..\js\script.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CSS", "CSS", "{BFFC4CEC-96D6-49A8-B4F6-50A6C7D7DF61}"
 	ProjectSection(SolutionItems) = preProject
-		..\css\form.css = ..\css\form.css
+		..\css\addperson_form.css = ..\css\addperson_form.css
+		..\css\databasepage.css = ..\css\databasepage.css
 		..\css\general.css = ..\css\general.css
 		..\css\navbar.css = ..\css\navbar.css
+		..\css\personform.css = ..\css\personform.css
+		..\css\personview.css = ..\css\personview.css
 		..\css\styles.css = ..\css\styles.css
 	EndProjectSection
 EndProject
