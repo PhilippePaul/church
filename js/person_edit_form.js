@@ -1,4 +1,71 @@
-$(document).ready(function () {
+﻿$(document).ready(function () {
+
+    $("#savePerson").click(function () {
+        if (!Validate()) {
+            return;
+        }
+        
+        var personId = $("#personlist").val();
+        if(personId) {
+
+        }
+
+        var person = {
+            Person: {
+                Id: personId,
+                FirstName: $("#firstname").val(),
+                LastName: $("#lastname").val(),
+                Gender: $("#gender").val() == "Homme" ? 0 : 1,
+                BirthDate: $("#birthdate").datepicker("getDate"),
+                Email: $("#email").val(),
+                Address: {
+                    StreetAddress: $("#address").val(),
+                    City: $("#city").val(),
+                    ProvinceState: $("province_state").val(),
+                    Country: $("#country").val(),
+                    PostalCode: $("#postalcode").val()
+                },
+                IsMember: $("#ismember").val() == "Oui"
+            },
+            Parents: parents,
+            Children: children,
+        };
+        $.ajax({
+            context: this,
+            url: "updatePerson",
+            data: JSON.stringify(person),
+            contentType: "application/json",
+            method: "POST",
+        })
+        .done(function (data) {
+            alert("Le profil a été modifié.");
+        })
+        .fail(function (error, b, c) {
+            alert("Une erreur est survenue lors de l'enregistrement:\n" + error.responseText);
+        });
+    });
+
+    $("#deleteBtn").click(function () {
+        var personId = $("#personlist").val();
+        if (personId) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce profil?")) {
+                $.ajax({
+                    context: this,
+                    url: "/deletePerson?" + personId,
+                    dataType: "html",
+                    method: "POST",
+                })
+                .done(function (data) {
+                    alert("Le profil a été supprimé.");
+                })
+                .fail(function (error, b, c) {
+                    alert("Une erreur est survenue: " + error.responseText);
+                });
+            }
+        } else {
+            alert("Aucun profil sélectionné.");
+        }
+    });
 
     $("#personform").load("person_form.html");
 
@@ -43,11 +110,7 @@ function LoadPerson(personid) {
         $("#firstname").val(person.FirstName);
         $("#lastname").val(person.LastName);
         $("#gender").val(person.Gender == 0 ? "Homme" : "Femme");
-
-        var date = new Date(person.BirthDate);
-        $("#bDate_day").val(new Date(person.BirthDate).getDate());
-        $("#bDate_month").val(new Date(person.BirthDate).getMonth());
-        $("#bDate_year").val(new Date(person.BirthDate).getFullYear());
+        $("#birthdate").datepicker("setDate", new Date(person.BirthDate));
         $("#email").val(person.Email);
         $("#address").val(person.Address.StreetAddress);
         $("#city").val(person.Address.City);
@@ -69,7 +132,7 @@ function LoadPerson(personid) {
             var parent = parents[i];
             var node = document.createElement("a");
             node.append(parent.FirstName + " " + parent.LastName);
-            node.href = "person_view_page.html?personid=" + parent.Id;
+            node.href = "person_edit_form.html?personid=" + parent.Id;
             node.classList.add("person_link");
             $("#parentsList").append(node);
         }
@@ -87,7 +150,7 @@ function LoadPerson(personid) {
             var parent = children[i];
             var node = document.createElement("a");
             node.append(parent.FirstName + " " + parent.LastName);
-            node.href = "person_view_page.html?personid=" + parent.Id;
+            node.href = "person_edit_form.html?personid=" + parent.Id;
             node.classList.add("person_link");
             $("#childrenList").append(node);
         }

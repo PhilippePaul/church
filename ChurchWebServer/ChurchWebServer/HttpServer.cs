@@ -246,6 +246,9 @@ namespace ChurchWebServer
                     case "addPerson":
                         HandleAddPerson(context);
                         break;
+                    case "deletePerson":
+                        HandleDeletePerson(context);
+                        break;
                     default:
                         break;
                 }
@@ -263,22 +266,27 @@ namespace ChurchWebServer
             int id;
             if (!int.TryParse(context.Request.Url.Query.Substring(1), out id))
             {
-                Console.WriteLine($"Invalid id in request. URL: {context.Request.RawUrl}");
-                return;
+                var error = $"Invalid id in request. URL: {context.Request.RawUrl}";
+                Console.WriteLine(error);
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.Write(error);
             }
-
-            try
+            else
             {
-                context.Response.OutputStream.WriteUTF8String(JsonConvert.SerializeObject(m_databaseInterface.GetChildren(id)));
+                try
+                {
+                    context.Response.Write(JsonConvert.SerializeObject(m_databaseInterface.GetChildren(id)));
 
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
-                context.Response.OutputStream.Flush();
-            }
-            catch (Exception ex)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                Console.WriteLine(ex);
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.OutputStream.Flush();
+                }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.Write(ex);
+                    Console.WriteLine(ex);
+                }
             }
 
             context.Response.OutputStream.Close();
@@ -289,22 +297,27 @@ namespace ChurchWebServer
             int id;
             if (!int.TryParse(context.Request.Url.Query.Substring(1), out id))
             {
-                Console.WriteLine($"Invalid id in request. URL: {context.Request.RawUrl}");
-                return;
+                var error = $"Invalid id in request. URL: {context.Request.RawUrl}";
+                Console.WriteLine(error);
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.Write(error);
             }
-
-            try
+            else
             {
-                context.Response.OutputStream.WriteUTF8String(JsonConvert.SerializeObject(m_databaseInterface.GetParents(id)));
+                try
+                {
+                    context.Response.Write(JsonConvert.SerializeObject(m_databaseInterface.GetParents(id)));
 
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
-                context.Response.OutputStream.Flush();
-            }
-            catch (Exception ex)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                Console.WriteLine(ex);
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.OutputStream.Flush();
+                }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.Write(ex);
+                    Console.WriteLine(ex);
+                }
             }
 
             context.Response.OutputStream.Close();
@@ -315,22 +328,27 @@ namespace ChurchWebServer
             int id;
             if (!int.TryParse(context.Request.Url.Query.Substring(1), out id))
             {
-                Console.WriteLine($"Invalid id in request. URL: {context.Request.RawUrl}");
-                return;
+                var error = $"Invalid id in request. URL: {context.Request.RawUrl}";
+                Console.WriteLine(error);
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.Write(error);
             }
-
-            try
+            else
             {
-                context.Response.OutputStream.WriteUTF8String(JsonConvert.SerializeObject(m_databaseInterface.GetPerson(id)));
+                try
+                {
+                    context.Response.Write(JsonConvert.SerializeObject(m_databaseInterface.GetPerson(id)));
 
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int)HttpStatusCode.OK;
-                context.Response.OutputStream.Flush();
-            }
-            catch (Exception ex)
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                Console.WriteLine(ex);
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.OutputStream.Flush();
+                }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.Write(ex);
+                    Console.WriteLine(ex);
+                }
             }
 
             context.Response.OutputStream.Close();
@@ -340,7 +358,7 @@ namespace ChurchWebServer
         {
             try
             {
-                context.Response.OutputStream.WriteUTF8String(JsonConvert.SerializeObject(m_databaseInterface.GetPersonList()));
+                context.Response.Write(JsonConvert.SerializeObject(m_databaseInterface.GetPersonList()));
 
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
@@ -349,12 +367,12 @@ namespace ChurchWebServer
             catch (Exception ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.Write(ex);
                 Console.WriteLine(ex);
             }
 
             context.Response.OutputStream.Close();
         }
-
 
         private void HandleAddPerson(HttpListenerContext context)
         {
@@ -364,16 +382,71 @@ namespace ChurchWebServer
                 using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
                 {
                     var val = reader.ReadToEnd();
-                    m_databaseInterface.CreatePerson(JsonConvert.DeserializeObject<PersonInfo>(val));
+                    var personInfo = JsonConvert.DeserializeObject<PersonInfo>(val);
+                    var id = m_databaseInterface.CreatePerson(personInfo.Person);
+                    m_databaseInterface.AddParents(id, personInfo.Parents);
+                    m_databaseInterface.AddChildren(id, personInfo.Children);
                 }
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                context.Response.OutputStream.WriteUTF8String(ex.Message);
+                context.Response.Write(ex);
                 Console.WriteLine(ex);
             }
+        }
+
+        private void HandleUpdatePerson(HttpListenerContext context)
+        {
+            try
+            {
+                var request = context.Request;
+                using (var reader = new StreamReader(request.InputStream, request.ContentEncoding))
+                {
+                    var val = reader.ReadToEnd();
+                    var personInfo = JsonConvert.DeserializeObject<PersonInfo>(val);
+                    m_databaseInterface.UpdatePerson(personInfo.Person);
+                    m_databaseInterface.UpdateAddress(personInfo.Person.Address);
+                }
+                context.Response.StatusCode = (int)HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.Write(ex);
+                Console.WriteLine(ex);
+            }
+        }
+
+        private void HandleDeletePerson(HttpListenerContext context)
+        {
+            int id;
+            if (!int.TryParse(context.Request.Url.Query.Substring(1), out id))
+            {
+                var error = $"Invalid id in request. URL: {context.Request.RawUrl}";
+                Console.WriteLine(error);
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                context.Response.Write(error);
+            }
+            else
+            {
+                try
+                {
+                    m_databaseInterface.DeletePerson(id);
+
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.OutputStream.Flush();
+                }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.Write(ex);
+                    Console.WriteLine(ex);
+                }
+            }
+            context.Response.OutputStream.Close();
         }
 
         #endregion

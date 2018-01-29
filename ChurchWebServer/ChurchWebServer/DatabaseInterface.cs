@@ -65,21 +65,46 @@ namespace ChurchWebServer
             }
         }
 
-        public void CreatePerson(PersonInfo personInfo)
+        public int CreatePerson(Person person)
         {
+            int id = -1;
             if (OpenConnection())
             {
                 try
                 {
                     var cmd = new MySqlCommand("create_person", connection);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("fn", personInfo.Person.FirstName);
-                    cmd.Parameters.AddWithValue("ln", personInfo.Person.LastName);
-                    cmd.Parameters.AddWithValue("bd", personInfo.Person.BirthDate);
-                    cmd.Parameters.AddWithValue("gender", personInfo.Person.Gender);
-                    cmd.Parameters.AddWithValue("email", personInfo.Person.Email);
-                    cmd.Parameters.AddWithValue("member", personInfo.Person.IsMember);
+                    cmd.Parameters.AddWithValue("fn", person.FirstName);
+                    cmd.Parameters.AddWithValue("ln", person.LastName);
+                    cmd.Parameters.AddWithValue("bd", person.BirthDate);
+                    cmd.Parameters.AddWithValue("gender", person.Gender);
+                    cmd.Parameters.AddWithValue("email", person.Email);
+                    cmd.Parameters.AddWithValue("member", person.IsMember);
 
+                    var dataReader = cmd.ExecuteReader();
+                    if (dataReader.Read())
+                    {
+                        id = Convert.ToInt32(dataReader["id"]);
+                    }
+                }
+                finally
+                {
+                    CloseConnection();
+                }
+            }
+
+            return id;
+        }
+
+        public void UpdatePerson(Person person)
+        {
+            var query = $"UPDATE church.person SET firstname='{person.FirstName}', lastname='{person.LastName}', birthdate='{person.BirthDate}', gender='{person.Gender}', email='{person.Email}', ismember='{person.IsMember}' WHERE idperson={person.Id}";
+
+            if (OpenConnection())
+            {
+                try
+                {
+                    var cmd = new MySqlCommand(query, connection);
                     cmd.ExecuteNonQuery();
                 }
                 finally
@@ -89,17 +114,20 @@ namespace ChurchWebServer
             }
         }
 
-        public void Update()
+        public void DeletePerson(int personId)
         {
-            var query = "UPDATE tableinfo SET name='Joe', age='22' WHERE name='John Smith'";
-
             if (OpenConnection())
             {
                 try
                 {
-                    MySqlCommand cmd = new MySqlCommand();
-                    cmd.CommandText = query;
-                    cmd.Connection = connection;
+                    //Delete relationships
+                    var query = $"DELETE FROM church.person_relationship WHERE person_id={personId} OR relative_id={personId}";
+                    var cmd = new MySqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+
+                    //Delete person
+                    query = $"DELETE FROM church.person WHERE idperson={personId}";
+                    cmd = new MySqlCommand(query, connection);
                     cmd.ExecuteNonQuery();
                 }
                 finally
@@ -109,15 +137,15 @@ namespace ChurchWebServer
             }
         }
 
-        public void Delete()
+        public void UpdateAddress(Address address)
         {
-            var query = "DELETE FROM tableinfo WHERE name='John Smith'";
+            var query = $"UPDATE church.address SET address1='{address.StreetAddress}', city='{address.City}', country='{address.Country}', province_state='{address.ProvinceState}', postalcode='{address.PostalCode}' WHERE idaddress={address.Id}";
 
             if (OpenConnection())
             {
                 try
                 {
-                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    var cmd = new MySqlCommand(query, connection);
                     cmd.ExecuteNonQuery();
                 }
                 finally
@@ -125,6 +153,62 @@ namespace ChurchWebServer
                     CloseConnection();
                 }
             }
+        }
+
+        public void AddParents(int personId, List<int> parentsId)
+        {
+            if (OpenConnection())
+            {
+                try
+                {
+                    foreach (var id in parentsId)
+                    {
+                        //Parent: person_id
+                        //Child: relative_id
+                        //relationship_type=1
+                        var query = $"INSERT INTO church.person_relationship (person_id, relative_id, relationship_type) VALUES ({id}, {personId}, 1)";
+                        var cmd = new MySqlCommand(query, connection);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                finally
+                {
+                    CloseConnection();
+                }
+            }
+        }
+
+        public void AddChildren(int personId, List<int> childrenId)
+        {
+            if (OpenConnection())
+            {
+                try
+                {
+                    foreach (var id in childrenId)
+                    {
+                        //Parent: person_id
+                        //Child: relative_id
+                        //relationship_type=1
+                        var query = $"INSERT INTO church.person_relationship (person_id, relative_id, relationship_type) VALUES ({personId}, {id}, 1)";
+                        var cmd = new MySqlCommand(query, connection);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                finally
+                {
+                    CloseConnection();
+                }
+            }
+        }
+
+        public void RemoveParents(int personId, List<int> parentsId)
+        {
+
+        }
+
+        public void RemoveChildren(int personId, List<int> childrenId)
+        {
+
         }
 
         #region Get methods

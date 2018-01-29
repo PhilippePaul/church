@@ -1,10 +1,10 @@
 $(document).ready(function () {
 
-    $("#viewframe").attr("src", "person_view_page.html");
+    $("#viewframe").attr("src", "person_edit_form.html");
 
-    $("a.sidebaritem").click(function (item) {
-        $("a.sidebaritem.selected").removeClass("selected");
+    $("div.sidebaritem").click(function (item) {
+        $("div.sidebaritem.selected").removeClass("selected");
         item.target.classList.add("selected");
-        $("#viewframe").attr("src", item.target.href);
+        $("#viewframe").attr("src", item.target.getAttribute("value"));
     });
 });

@@ -11,18 +11,15 @@
     <script src="js/script.js"></script>
     <script src="js/databasepage.js"></script>
 </head>
-<body style="background-color:rgba(0,0,0,.06)" class="grid-container">
+<body class="grid-container">
     <div id="navigationbar" class="navContainer"></div>
     <div class="sidebar-container">
         <div class="sidebar">
-            <a class="sidebaritem" href="addperson_form.html" onclick="return false;">Ajouter un profil</a>
-            <a class="sidebaritem selected" href="person_view_page.html" onclick="return false;">Modifier un profil</a>
-            <a class="sidebaritem" href="index.html" onclick="return false;">Groupes Connection</a>
-            <a class="sidebaritem" href="audio.html" onclick="return false;">Petits Groupes</a>
-            <a class="sidebaritem" href="index.html" onclick="return false;">VIDEO</a>
-            <a class="sidebaritem" href="index.html" onclick="return false;">RESERVATIONS</a>
-            <a class="sidebaritem" href="index.html" onclick="return false;">BIBLIOTHEQUE</a>
-            <a class="sidebaritem" href="2048.html" onclick="return false;">2048</a>
+            <div class="sidebaritem selected" value="person_edit_form.html">Modifier un profil</div>
+            <div class="sidebaritem" value="addperson_form.html">Ajouter un profil</div>
+            <div class="sidebaritem" value="index.html">Groupes Connection</div>
+            <div class="sidebaritem" value="audio.html">Petits Groupes</div>
+            <div class="sidebaritem" value="2048.html">2048</div>
         </div>
         <iframe id="viewframe" class="contentViewer" frameborder="0"></iframe>
     </div>

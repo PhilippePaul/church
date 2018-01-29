@@ -15,7 +15,6 @@ label {
 }
 
 div.userinfo {
-    background-color:#f1f1f1;
     float:left;
     border:none;
 }
@@ -25,19 +24,37 @@ input.formfield {
     display:inline-block;
     border: 1px solid #d9d9d9;
     border-top: 1px solid #c0c0c0;
-    margin-right:5px;
-    box-sizing:border-box;
     width:100%;
 }
 
-select.month_picker {
-    padding:6px 15px;
+input[type=button] {
+    border-radius:3px 4px;
+    border:none;
+    cursor: pointer;
+    padding:5px 10px;
+    border:1px solid #6f6f6f;
+}
+
+fieldset {
+    margin-bottom: 20px;
+}
+
+#birthdate {
     border: 1px solid #d9d9d9;
     border-top: 1px solid #c0c0c0;
-    margin-right:5px;
-    box-sizing:border-box;
+    padding: 7px 6px;
 }
 
 a.person_link {
     display:block;
+}
+
+a:visited {
+    color:#0000FF;
+}
+
+span.validation {
+    visibility: hidden;
+    color:red;
+    font-size: 12px;
 }

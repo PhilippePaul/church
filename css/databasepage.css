@@ -1,38 +1,40 @@
 .grid-container {
     display:grid;
-    grid-template-rows: repeat(15, 1fr);
-    grid-gap: 30px;
+    grid-template-rows: auto 1fr;
     height:100vh;
     width:100vw;
 }
 
 .sidebar-container {
-    grid-row-end: span 14;
     display:grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-gap: 20px;
+    grid-template-columns: auto 1fr;
+}
+
+.sidebar {
+    background-color:rgba(102, 103, 118, 0.74);
 }
 
 .contentViewer {
-    grid-column-end: span 6;
     width:100%;
-    height:93%;
+    height:100%;
+    padding:20px 30px;
 }
 
-a.sidebaritem {
+div.sidebaritem {
     display:block;
-    color:rgba(0,0,0,.72);
-    font-weight:bold;
+    color: #f1f1f1;
     padding: 14px 16px;
     text-decoration: none;
-    font-size: 13px;
+    letter-spacing: 0.5px;
+    font-size: 16px;
     font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
 }
 
-a:hover {
+div.sidebaritem:hover {
     background-color:rgba(0,0,0,.08);
+    cursor:pointer;
 }
 
-a.sidebaritem.selected {
+div.sidebaritem.selected {
     background-color:rgba(0,0,0,.12);
 }
