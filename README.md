@@ -1,8 +1,7 @@
 TODO:
 
--Form validation
 -Create/set address when creating profile
--Relatives, spouses 
+-spouses 
 -Groupes Connexion: Name, members/leader(s), Notes, Location, dates? or days of week? too variable?
 -Petits Groupes: Members, leader(s), name, notes/details, dates?
 
