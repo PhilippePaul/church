@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $("#viewframe").attr("src", "person_edit_form.html");
+    $("#viewframe").attr("src", $("div.sidebaritem.selected").attr("value"));
 
     $("div.sidebaritem").click(function (item) {
         $("div.sidebaritem.selected").removeClass("selected");

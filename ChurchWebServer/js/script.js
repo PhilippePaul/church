@@ -1,4 +1,7 @@
-$(document).ready(function() {
+var children_edit_list = [];
+var parents_edit_list = [];
+
+$(document).ready(function () {
 	$("#navigationbar").load("topnavigationbar.html");
 });
 
@@ -36,4 +39,12 @@ function Validate() {
     }
 
     return isValid;
+}
+
+function PadWithZeroes(number, length) {
+    var my_string = '' + number;
+    while (my_string.length < length) {
+        my_string = '0' + my_string;
+    }
+    return my_string;
 }

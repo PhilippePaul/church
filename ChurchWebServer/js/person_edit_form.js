@@ -15,7 +15,7 @@
                 Id: personId,
                 FirstName: $("#firstname").val(),
                 LastName: $("#lastname").val(),
-                Gender: $("#gender").val() == "Homme" ? 0 : 1,
+                Gender: $("#genderMale").prop("checked") ? 0 : 1,
                 BirthDate: $("#birthdate").datepicker("getDate"),
                 Email: $("#email").val(),
                 Address: {
@@ -25,10 +25,10 @@
                     Country: $("#country").val(),
                     PostalCode: $("#postalcode").val()
                 },
-                IsMember: $("#ismember").val() == "Oui"
+                IsMember: $("#ismember").prop("checked")
             },
-            Parents: parents,
-            Children: children,
+            Parents: parents_edit_list,
+            Children: children_edit_list,
         };
         $.ajax({
             context: this,
@@ -49,6 +49,7 @@
         var personId = $("#personlist").val();
         if (personId) {
             if (confirm("Êtes-vous sûr de vouloir supprimer ce profil?")) {
+                var index = $("#personlist").selectedIndex;
                 $.ajax({
                     context: this,
                     url: "/deletePerson?" + personId,
@@ -57,6 +58,10 @@
                 })
                 .done(function (data) {
                     alert("Le profil a été supprimé.");
+
+                    LoadPersonList(function () {
+                        LoadPerson($("#personlist").val());
+                    });
                 })
                 .fail(function (error, b, c) {
                     alert("Une erreur est survenue: " + error.responseText);
@@ -74,21 +79,7 @@
         LoadPerson($("#personlist").val());
     });
 
-    $.ajax({
-        context: this,
-        url: "/getPersonList",
-        method: "POST",
-    })
-    .done(function (data) {
-        var personList = JSON.parse(data);
-        for (i = 0; i < personList.length; ++i) {
-            var person = personList[i];
-            var node = document.createElement("option");
-            node.append(person.FirstName + " " + person.LastName);
-            node.value = person.Id;
-            $("#personlist").append(node);
-        }
-
+    LoadPersonList(function () {
         var personid = GetParameterByName("personid");
         if (personid) {
             $("#personlist").val(personid).trigger("change");
@@ -98,6 +89,26 @@
         }
     });
 });
+
+function LoadPersonList(postLoadFunction) {
+    $.ajax({
+        context: this,
+        url: "/getPersonList",
+        method: "POST",
+    })
+    .done(function (data) {
+        $("#personlist").empty();
+        var personList = JSON.parse(data);
+        for (i = 0; i < personList.length; ++i) {
+            var person = personList[i];
+            var node = document.createElement("option");
+            node.append(person.FirstName + " " + person.LastName);
+            node.value = person.Id;
+            $("#personlist").append(node);
+        }
+        postLoadFunction();
+    });
+}
 
 function LoadPerson(personid) {
     $.ajax({
@@ -135,6 +146,7 @@ function LoadPerson(personid) {
             node.href = "person_edit_form.html?personid=" + parent.Id;
             node.classList.add("person_link");
             $("#parentsList").append(node);
+            parents_edit_list.push(parent.Id);
         }
     });
 
@@ -147,22 +159,15 @@ function LoadPerson(personid) {
         $("#childrenList").empty();
         var children = JSON.parse(data);
         for (i = 0; i < children.length; ++i) {
-            var parent = children[i];
+            var child = children[i];
             var node = document.createElement("a");
-            node.append(parent.FirstName + " " + parent.LastName);
-            node.href = "person_edit_form.html?personid=" + parent.Id;
+            node.append(child.FirstName + " " + child.LastName);
+            node.href = "person_edit_form.html?personid=" + child.Id;
             node.classList.add("person_link");
             $("#childrenList").append(node);
+            children_edit_list.push(child.Id);
         }
     });
-}
-
-function PadWithZeroes(number, length) {
-    var my_string = '' + number;
-    while (my_string.length < length) {
-        my_string = '0' + my_string;
-    }
-    return my_string;
 }
 
 function GetParameterByName(name) {

@@ -1,7 +1,4 @@
-﻿var children = [];
-var parents = [];
-
-$(document).ready(function () {
+﻿$(document).ready(function () {
     
     $("#personform").load("person_form.html");
     $("#childSelectList").select2({ dropdownAutoWidth: true, width: 'auto' });
@@ -9,18 +6,18 @@ $(document).ready(function () {
 
     $("#addChild").click(function () {
         var person = JSON.parse($("#childSelectList").val());
-        if (children.indexOf(person.Id) != -1 || parents.indexOf(person.Id) != -1) {
+        if (children_edit_list.indexOf(person.Id) != -1 || parents_edit_list.indexOf(person.Id) != -1) {
             alert(person.FirstName + " " + person.LastName + "a déjà ajouté(e).");
         }
         else {
-            children.push(person.Id);
+            children_edit_list.push(person.Id);
             var node = document.createElement("div");
             var button = document.createElement("button");
             button.append("-");
             button.onclick = function () {
-                var index = children.indexOf($(this).parent().val());
+                var index = children_edit_list.indexOf($(this).parent().val());
                 if (index != -1) {
-                    children.splice(index, 1);
+                    children_edit_list.splice(index, 1);
                 }
                 $(this).parent().remove();
             };
@@ -33,18 +30,18 @@ $(document).ready(function () {
 
     $("#addParent").click(function () {
         var person = JSON.parse($("#parentSelectList").val());
-        if (parents.indexOf(person.Id) != -1 || children.indexOf(person.Id) != -1) {
+        if (parents_edit_list.indexOf(person.Id) != -1 || children_edit_list.indexOf(person.Id) != -1) {
             alert(person.FirstName + " " + person.LastName + " a déjà ajouté(e).");
         }
         else {
-            parents.push(person.Id);
+            parents_edit_list.push(person.Id);
             var node = document.createElement("div");
             var button = document.createElement("button");
             button.append("-");
             button.onclick = function () {
-                var index = parents.indexOf($(this).parent().val());
+                var index = parents_edit_list.indexOf($(this).parent().val());
                 if (index != -1) {
-                    parents.splice(index, 1);
+                    parents_edit_list.splice(index, 1);
                 }
                 $(this).parent().remove();
             };
@@ -70,14 +67,14 @@ $(document).ready(function () {
                 Address: {
                     StreetAddress: $("#address").val(),
                     City: $("#city").val(),
-                    ProvinceState: $("province_state").val(),
+                    ProvinceState: $("#province_state").val(),
                     Country: $("#country").val(),
                     PostalCode: $("#postalcode").val()
                 },
                 IsMember: $("#ismember").val() == "Oui"
             },
-            Parents: parents,
-            Children: children,
+            Parents: parents_edit_list,
+            Children: children_edit_list,
         };
         $.ajax({
             context: this,
@@ -88,6 +85,7 @@ $(document).ready(function () {
         })
         .done(function (data) {
             alert("Le profile a été créé!");
+            ClearFields();
         })
         .fail(function (error, b, c) {
             alert("Une erreur est survenue lors de l'enregistrement:\n" + error.responseText);
@@ -111,3 +109,22 @@ $(document).ready(function () {
         },
     });
 });
+
+function ClearFields() {
+
+    $("#firstname").val("");
+    $("#lastname").val("");
+    $("#gender").val("");
+    $("#birthdate").datepicker("setDate", null),
+    $("#email").val("");
+    $("#ismember").val("");
+    $("#address").val("");
+    $("#city").val("");
+    $("#province_state").val("");
+    $("#country").val("");
+    $("#postalcode").val("");
+    parents_edit_list.length = 0;
+    children_edit_list.length = 0;
+    $("#parentsList").empty();
+    $("#childrenList").empty();
+}

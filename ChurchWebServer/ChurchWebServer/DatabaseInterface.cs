@@ -78,8 +78,10 @@ namespace ChurchWebServer
                     cmd.Parameters.AddWithValue("ln", person.LastName);
                     cmd.Parameters.AddWithValue("bd", person.BirthDate);
                     cmd.Parameters.AddWithValue("gender", person.Gender);
+                    cmd.Parameters.AddWithValue("address", person.Address.Id);
                     cmd.Parameters.AddWithValue("email", person.Email);
                     cmd.Parameters.AddWithValue("member", person.IsMember);
+                    cmd.Parameters.AddWithValue("creationdate", DateTime.Now);
 
                     var dataReader = cmd.ExecuteReader();
                     if (dataReader.Read())
@@ -155,7 +157,7 @@ namespace ChurchWebServer
             }
         }
 
-        public void AddParents(int personId, List<int> parentsId)
+        public void AddParentsRelationship(int personId, List<int> parentsId)
         {
             if (OpenConnection())
             {
@@ -178,7 +180,7 @@ namespace ChurchWebServer
             }
         }
 
-        public void AddChildren(int personId, List<int> childrenId)
+        public void AddChildrenRelationship(int personId, List<int> childrenId)
         {
             if (OpenConnection())
             {
@@ -209,6 +211,36 @@ namespace ChurchWebServer
         public void RemoveChildren(int personId, List<int> childrenId)
         {
 
+        }
+
+        public int CreateAddress(Address address)
+        {
+            int id = -1;
+            if (OpenConnection())
+            {
+                try
+                {
+                    var cmd = new MySqlCommand("create_address", connection);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("address1", address.StreetAddress);
+                    cmd.Parameters.AddWithValue("city", address.City);
+                    cmd.Parameters.AddWithValue("province_state", address.ProvinceState);
+                    cmd.Parameters.AddWithValue("country", address.Country);
+                    cmd.Parameters.AddWithValue("postalcode", address.PostalCode);
+
+                    var dataReader = cmd.ExecuteReader();
+                    if (dataReader.Read())
+                    {
+                        id = Convert.ToInt32(dataReader["id"]);
+                    }
+                }
+                finally
+                {
+                    CloseConnection();
+                }
+            }
+
+            return id;
         }
 
         #region Get methods

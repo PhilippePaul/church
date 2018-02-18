@@ -18,7 +18,8 @@
         </fieldset>
         <fieldset>
             <legend>Sexe</legend>
-            <input type="text" id="gender" class="formfield">
+            <input type="radio" id="genderMale" name="gender" class="formfield" style="width:auto">Masculin
+            <input type="radio" id="genderFemale" name="gender" class="formfield" style="width:auto">Feminin
         </fieldset>
         <fieldset>
             <legend>Date de naissance</legend>
@@ -29,10 +30,6 @@
             <legend>Adresse courriel</legend>
             <input type="email" id="email" class="formfield">
             <span id="emailError" class="validation">Champ invalide.</span>
-        </fieldset>
-        <fieldset>
-            <legend>Membre</legend>
-            <input type="text" id="ismember" class="formfield">
         </fieldset>
         <fieldset>
             <legend>Adresse</legend>
@@ -58,6 +55,9 @@
             <legend>Code Postal</legend>
             <input type="text" id="postalcode" class="formfield">
             <span id="postalcodeError" class="validation">Vous devez remplir ce champ.</span>
+        </fieldset>
+        <fieldset>
+            <b style="margin-right:5px">Membre</b><input type="checkbox" id="ismember" class="formfield" style="width:auto">
         </fieldset>
     </div>
 </body>

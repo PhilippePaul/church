@@ -246,6 +246,9 @@ namespace ChurchWebServer
                     case "addPerson":
                         HandleAddPerson(context);
                         break;
+                    case "updatePerson":
+                        HandleUpdatePerson(context);
+                        break;
                     case "deletePerson":
                         HandleDeletePerson(context);
                         break;
@@ -383,9 +386,12 @@ namespace ChurchWebServer
                 {
                     var val = reader.ReadToEnd();
                     var personInfo = JsonConvert.DeserializeObject<PersonInfo>(val);
-                    var id = m_databaseInterface.CreatePerson(personInfo.Person);
-                    m_databaseInterface.AddParents(id, personInfo.Parents);
-                    m_databaseInterface.AddChildren(id, personInfo.Children);
+
+                    var addressId = m_databaseInterface.CreateAddress(personInfo.Person.Address);
+                    personInfo.Person.Address.Id = addressId;
+                    var personId = m_databaseInterface.CreatePerson(personInfo.Person);
+                    m_databaseInterface.AddParentsRelationship(personId, personInfo.Parents);
+                    m_databaseInterface.AddChildrenRelationship(personId, personInfo.Children);
                 }
                 context.Response.StatusCode = (int)HttpStatusCode.OK;
             }

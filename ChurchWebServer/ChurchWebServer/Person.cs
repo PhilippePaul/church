@@ -14,6 +14,7 @@ namespace ChurchWebServer
         public string Email { get; set; } = string.Empty;
         public Address Address { get; set; } = new Address();
         public bool IsMember { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 
     public class PersonInfo

@@ -4,9 +4,6 @@ div.navContainer {
     width: 100%;
 }
 
-div.topnav {
-}
-
 a.topnavitem {
     display: block;
     color: #f1f1f1;
@@ -17,6 +14,11 @@ a.topnavitem {
     font-size: 17px;
     font-family: "Segoe UI",Arial,sans-serif;
     float: left;
+}
+
+a.topnavitem.selected {
+    color: #000000;
+    font-weight: bold;
 }
 
 a.topnavitem:hover {
