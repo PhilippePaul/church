@@ -1,7 +1,7 @@
 TODO:
 
--Delete address, relationships when deleting person
--spouses 
+-Update relationships on Modify
+-spouses
 -Groupes Connexion: Name, members/leader(s), Notes, Location, dates? or days of week? too variable?
 -Petits Groupes: Members, leader(s), name, notes/details, dates?
 

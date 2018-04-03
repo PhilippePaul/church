@@ -100,7 +100,7 @@ namespace ChurchWebServer
 
         public void UpdatePerson(Person person)
         {
-            var query = $"UPDATE church.person SET firstname='{person.FirstName}', lastname='{person.LastName}', birthdate='{person.BirthDate}', gender='{person.Gender}', email='{person.Email}', ismember='{person.IsMember}' WHERE idperson={person.Id}";
+            var query = $"UPDATE church.person SET firstname='{person.FirstName}', lastname='{person.LastName}', birthdate='{person.BirthDate.ToString("yyyy-MM-dd")}', gender='{(int)person.Gender}', email='{person.Email}', ismember='{(person.IsMember ? 1 : 0).ToString()}' WHERE idperson={person.Id}";
 
             if (OpenConnection())
             {
@@ -125,6 +125,12 @@ namespace ChurchWebServer
                     //Delete relationships
                     var query = $"DELETE FROM church.person_relationship WHERE person_id={personId} OR relative_id={personId}";
                     var cmd = new MySqlCommand(query, connection);
+                    cmd.ExecuteNonQuery();
+
+                    //Delete Address
+                    var person = GetPerson(personId);
+                    query = $"DELETE FROM church.address WHERE idaddress={person.Address.Id}";
+                    cmd = new MySqlCommand(query, connection);
                     cmd.ExecuteNonQuery();
 
                     //Delete person
@@ -412,12 +418,21 @@ namespace ChurchWebServer
             person.Gender = (Gender)Convert.ToInt32(dataReader["gender"]);
             person.Email = dataReader["email"].ToString();
             person.IsMember = Convert.ToBoolean(dataReader["ismember"]);
-            person.Address.StreetAddress = dataReader["address1"].ToString();
-            person.Address.City = dataReader["city"].ToString();
-            person.Address.ProvinceState = dataReader["province_state"].ToString();
-            person.Address.Country = dataReader["country"].ToString();
-            person.Address.PostalCode = dataReader["postalcode"].ToString();
+            person.Address = ExtractAddress(dataReader);
             return person;
+        }
+
+        private Address ExtractAddress(MySqlDataReader dataReader)
+        {
+            var address = new Address();
+            address.Id = (int)dataReader["idaddress"];
+            address.StreetAddress = dataReader["address1"].ToString();
+            address.City = dataReader["city"].ToString();
+            address.ProvinceState = dataReader["province_state"].ToString();
+            address.Country = dataReader["country"].ToString();
+            address.PostalCode = dataReader["postalcode"].ToString();
+
+            return address;
         }
 
         #endregion

@@ -13,16 +13,24 @@
             }));
         }
 
-        $("#person_table").DataTable({
+        var dataTable = $("#person_table").DataTable({
             data: dataList,
             columns: [
                 {
-                    title: "Id",
-                    visible: false
+                    targets: -1,
+                    data: null,
+                    defaultContent: "<button>Modifier</button>"
                 },
-                { title: "Prénom" },
-                { title: "Nom" },
                 {
+                    targets: 0,
+                    title: "Prénom"
+                },
+                {
+                    targets: 1,
+                    title: "Nom"
+                },
+                {
+                    targets: 2,
                     title: "Date de naissance",
                     render: function (d) {
                         var date = new Date(d);
@@ -30,25 +38,32 @@
                     }
                 },
                 {
+                    targets: 3,
                     title: "Genre",
                     render: function (val) {
                         return val == 0 ? "Masculin" : "Feminin";
                     }
                 },
-                { title: "Courriel" },
                 {
+                    targets: 4,
+                    title: "Courriel"
+                },
+                {
+                    targets: 5,
                     title: "Ville",
                     render: function (val) {
                         return val.City;
                     }
                 },
                 {
+                    targets: 6,
                     title: "Membre",
                     render: function (val) {
                         return val ? "Oui" : "Non";
                     }
                 },
                 {
+                    targets: 7,
                     title: "Date d'ajout",
                     render: function (d) {
                         var date = new Date(d);
@@ -78,6 +93,18 @@
                     sortDescending: ": activer pour trier la colonne par ordre décroissant"
                 }
             }
+        });
+
+        $("#person_table tbody").on("click", "button", function () {
+
+            var selected = parent.document.getElementsByClassName("selected");
+            while (selected.length) {
+                selected[0].classList.remove("selected");
+            }
+            parent.document.getElementById("modifyProfile").classList.add("selected");
+
+            var data = dataTable.row($(this).parents("tr")).data();
+            window.location = "EditPerson.html?action=modify&personid=" + data[0];
         });
     });
 });

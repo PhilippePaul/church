@@ -5,6 +5,11 @@ $(document).ready(function () {
 	$("#navigationbar").load("topnavigationbar.html");
 });
 
+function GetParameterByName(name) {
+    var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
 function Validate() {
     var isValid = true;
     if ($("#firstname").val() == "") {

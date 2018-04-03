@@ -4,22 +4,26 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" href="css/styles.css?v=1.0">
-    <link rel="stylesheet" href="css/addperson_form.css?v=1.0">
+    <link rel="stylesheet" href="css/EditPerson.css?v=1.0">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" type="text/css" media="all" />
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/i18n/jquery-ui-i18n.min.js"></script>
-    <script src="js/addperson_form.js"></script>
+    <script src="js/EditPerson.js"></script>
     <script src="js/script.js"></script>
 </head>
 <body>
     <div class="grid-container">
+        <div id="modifyControls" class="commands-container" style="display:none">
+            <select id="personlist"></select>
+            <input type="button" value="Supprimer" id="deleteBtn">
+        </div>
         <div class="personform-container">
             <div id="personform">
             </div>
-            <input id="savePerson" type="button" value="Enregistrer"/>
+            <input id="saveBtn" type="button" value="Enregistrer"/>
         </div>
         <div class="parentsList-container">
             <fieldset id="parentsField">

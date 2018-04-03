@@ -1,0 +1,42 @@
+.grid-container {
+    display:grid;
+    grid-template-columns:auto auto 1fr;
+    grid-template-rows: auto auto auto 1fr;
+    grid-gap: 20px;
+}
+
+.commands-container {
+    grid-column:1;
+}
+
+.personform-container {
+    grid-column: 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    grid-gap: 20px;
+}
+
+.parentsList-container {
+    grid-column: 2;
+}
+
+.childrenList-container {
+    grid-column: 3;
+}
+
+#personForm {
+    grid-row: 1;
+}
+
+#deleteBtn {
+    margin-left: 10px;
+    border: none;
+    background-color: white;
+    color: #d33104;
+    text-decoration: underline;
+}
+
+#saveBtn {
+    grid-row: 2;
+}
